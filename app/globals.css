@@ -1,26 +1,4142 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #090a0a;
+  --surface: #111313;
+  --surface-light: #171919;
+  --text: #f4f4ef;
+  --muted: #8e9390;
+  --line: rgba(255, 255, 255, 0.1);
+  --accent: #c9ff3d;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  margin: 0;
+  min-height: 100%;
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 38px 52px 30px;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      circle at 72% 30%,
+      rgba(201, 255, 61, 0.055),
+      transparent 30%
+    ),
+    linear-gradient(145deg, #090a0a 0%, #0b0d0c 55%, #080909 100%);
+}
+
+.login-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.7'/%3E%3C/svg%3E");
+}
+
+.ambient {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  z-index: -2;
+  pointer-events: none;
+}
+
+.ambient-one {
+  width: 390px;
+  height: 390px;
+  background: rgba(201, 255, 61, 0.045);
+  right: 4%;
+  top: 12%;
+}
+
+.ambient-two {
+  width: 300px;
+  height: 300px;
+  background: rgba(120, 255, 190, 0.025);
+  left: 3%;
+  bottom: 3%;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+.brand-mark {
+  width: 39px;
+  height: 39px;
+  border: 1px solid rgba(201, 255, 61, 0.45);
+  background: rgba(201, 255, 61, 0.08);
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.045em;
+}
+
+.brand-name span {
+  color: var(--accent);
+}
+
+.login-container {
+  width: min(100%, 500px);
+  margin: auto;
+  padding: 40px 0 75px;
+}
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  margin-bottom: 25px;
+}
+
+.eyebrow-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 14px rgba(201, 255, 61, 0.55);
+}
+
+h1 {
+  margin: 0;
+  font-size: clamp(48px, 6vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -0.065em;
+  font-weight: 650;
+}
+
+h1 em {
+  color: var(--accent);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.intro {
+  color: var(--muted);
+  margin: 26px 0 44px;
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 10px;
+  color: #b7bbb8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  pointer-events: none;
+  border: 1px solid transparent;
+  transition: border-color 180ms ease;
+}
+
+.input-wrap:focus-within::before {
+  border-color: rgba(201, 255, 61, 0.45);
+}
+
+input {
+  width: 100%;
+  height: 62px;
+  outline: none;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: rgba(18, 20, 19, 0.82);
+  color: var(--text);
+  padding: 0 19px;
+
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.11em;
+
+  transition:
+    background 180ms ease,
+    border-color 180ms ease;
+}
+
+input::placeholder {
+  color: #515653;
+}
+
+input:focus {
+  background: rgba(21, 23, 22, 0.95);
+  border-color: rgba(201, 255, 61, 0.22);
+}
+
+button {
+  width: 100%;
+  height: 59px;
+  margin-top: 13px;
+  border: 0;
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+
+  background: var(--accent);
+  color: #11130d;
+
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+
+  transition:
+    transform 150ms ease,
+    opacity 150ms ease,
+    box-shadow 150ms ease;
+}
+
+button:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 35px rgba(201, 255, 61, 0.13);
+}
+
+button:not(:disabled):active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.32;
+  cursor: not-allowed;
+}
+
+.arrow {
+  font-size: 21px;
+  font-weight: 400;
+}
+
+.help-text {
+  margin-top: 19px;
+  text-align: center;
+  color: #676c69;
+  font-size: 11px;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  color: #484c49;
+  font-size: 10px;
+  letter-spacing: 0.03em;
+}
+
+.footer-message {
+  color: #626763;
+}
+
+@media (max-width: 650px) {
+  .login-page {
+    padding: 25px 22px 22px;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand-name {
+    font-size: 18px;
+  }
+
+  .login-container {
+    padding: 55px 0 35px;
+  }
+
+  h1 {
+    font-size: clamp(48px, 15vw, 66px);
+  }
+
+  .intro {
+    margin: 23px 0 38px;
+  }
+
+  footer {
+    margin-top: auto;
+  }
+
+  .footer-message {
+    display: none;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — TRAINER LOGIN
+   ========================================================= */
+
+.admin-login-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 38px 52px 30px;
+  isolation: isolate;
+
+  background:
+    radial-gradient(
+      circle at 72% 45%,
+      rgba(201, 255, 61, 0.055),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 12% 80%,
+      rgba(120, 255, 190, 0.025),
+      transparent 25%
+    ),
+    #090a0a;
+}
+
+.admin-login-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.02;
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.7'/%3E%3C/svg%3E");
+}
+
+.admin-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(130px);
+  z-index: -2;
+  pointer-events: none;
+}
+
+.admin-glow-one {
+  width: 430px;
+  height: 430px;
+  right: 8%;
+  top: 18%;
+  background: rgba(201, 255, 61, 0.04);
+}
+
+.admin-glow-two {
+  width: 300px;
+  height: 300px;
+  left: 4%;
+  bottom: 0;
+  background: rgba(125, 255, 191, 0.025);
+}
+
+.admin-login-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.trainer-portal-label {
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: #777d79;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.admin-login-shell {
+  width: min(100%, 1050px);
+  margin: auto;
+
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 110px;
+  align-items: center;
+
+  padding: 60px 0 80px;
+}
+
+.admin-login-copy p {
+  margin: 28px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+.admin-title {
+  font-size: clamp(50px, 5vw, 72px);
+}
+
+.admin-title em {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.74em;
+}
+
+.admin-login-card {
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+
+  background: rgba(17, 19, 18, 0.74);
+  backdrop-filter: blur(20px);
+
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.admin-card-heading {
+  margin-bottom: 29px;
+}
+
+.admin-card-kicker {
+  color: var(--accent);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.admin-card-heading h2 {
+  margin: 8px 0 7px;
+  font-size: 27px;
+  letter-spacing: -0.045em;
+}
+
+.admin-card-heading p {
+  margin: 0;
+  color: #777c79;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.admin-field + .admin-field {
+  margin-top: 17px;
+}
+
+.admin-field label {
+  display: block;
+  margin-bottom: 9px;
+  color: #afb4b0;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.admin-field input {
+  height: 55px;
+  letter-spacing: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.admin-login-button {
+  height: 55px;
+  margin-top: 20px;
+}
+
+.admin-login-error {
+  margin-top: 16px;
+  padding: 11px 13px;
+
+  border: 1px solid rgba(255, 104, 104, 0.2);
+  border-radius: 10px;
+
+  background: rgba(255, 104, 104, 0.055);
+  color: #e7a0a0;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.admin-secure-note {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+
+  color: #525753;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.admin-secure-note span {
+  color: var(--accent);
+  font-size: 7px;
+}
+
+@media (max-width: 850px) {
+  .admin-login-shell {
+    width: min(100%, 500px);
+    grid-template-columns: 1fr;
+    gap: 42px;
+  }
+
+  .admin-login-copy {
+    display: none;
+  }
+}
+
+@media (max-width: 650px) {
+  .admin-login-page {
+    padding: 25px 22px 22px;
+  }
+
+  .trainer-portal-label {
+    font-size: 7px;
+    padding: 7px 9px;
+  }
+
+  .admin-login-shell {
+    padding: 45px 0 35px;
+  }
+
+  .admin-login-card {
+    padding: 27px 22px;
+    border-radius: 20px;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — TRAINER DASHBOARD
+   ========================================================= */
+
+.dashboard-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  background: #090a0a;
+}
+
+.loading-mark {
+  width: 54px;
+  height: 54px;
+  margin: auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(201, 255, 61, 0.4);
+  border-radius: 15px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.dashboard-loading p {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.trainer-dashboard {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 230px 1fr;
+  background:
+    radial-gradient(circle at 75% 0%, rgba(201, 255, 61, 0.035), transparent 25%),
+    #090a0a;
+}
+
+.dashboard-sidebar {
+  height: 100dvh;
+  position: sticky;
+  top: 0;
+  padding: 29px 20px 20px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.065);
+  background: rgba(12, 14, 13, 0.88);
+}
+
+.dashboard-logo {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 0 7px;
+}
+
+.dashboard-nav {
+  margin-top: 43px;
+}
+
+.nav-item {
+  width: 100%;
+  height: 44px;
+  margin: 3px 0;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  background: transparent;
+  color: #777d79;
+
+  font-size: 11px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.nav-item:hover:not(.active) {
+  transform: none;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.nav-item span {
+  width: 17px;
+  color: #646a66;
+  font-size: 14px;
+}
+
+.nav-item.active {
+  background: rgba(201, 255, 61, 0.08);
+  color: #e7e9e5;
+}
+
+.nav-item.active span {
+  color: var(--accent);
+}
+
+.nav-item small {
+  margin-left: auto;
+  color: #4e534f;
+  font-size: 7px;
+  letter-spacing: 0.12em;
+}
+
+.nav-item.muted {
+  opacity: 0.7;
+}
+
+.nav-divider {
+  height: 1px;
+  margin: 17px 10px;
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.sidebar-profile {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 10px;
+
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+
+  background: transparent;
+  color: inherit;
+  border-radius: 11px;
+}
+
+.sidebar-profile:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  background: rgba(255, 255, 255, 0.025) !important;
+}
+
+.profile-avatar {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: grid;
+  place-items: center;
+
+  border-radius: 10px;
+  background: rgba(201, 255, 61, 0.09);
+  color: var(--accent);
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.sidebar-profile div:last-child {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.sidebar-profile strong {
+  color: #c7cbc7;
+  font-size: 10px;
+}
+
+.sidebar-profile span {
+  margin-top: 3px;
+  color: #565b57;
+  font-size: 8px;
+}
+
+.dashboard-main {
+  width: min(100%, 1260px);
+  padding: 50px 54px;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.dashboard-kicker,
+.panel-kicker,
+.stat-label {
+  color: #686e69;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.dashboard-header h1 {
+  margin-top: 13px;
+  font-size: clamp(38px, 4vw, 55px);
+  line-height: 0.98;
+}
+
+.dashboard-header h1 em {
+  font-size: 0.92em;
+}
+
+.new-invite-button {
+  width: auto;
+  min-width: 135px;
+  height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  gap: 16px;
+  justify-content: center;
+  border-radius: 11px;
+  font-size: 11px;
+}
+
+.dashboard-stats {
+  margin-top: 43px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 11px;
+}
+
+.stat-card {
+  min-height: 135px;
+  padding: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+
+  background: rgba(16, 18, 17, 0.66);
+}
+
+.stat-card strong {
+  display: block;
+  margin-top: 19px;
+
+  color: #eff1ec;
+  font-size: 29px;
+  letter-spacing: -0.05em;
+}
+
+.stat-card p {
+  margin: 5px 0 0;
+  color: #555b56;
+  font-size: 9px;
+}
+
+.accent-stat {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(201, 255, 61, 0.07),
+      rgba(16, 18, 17, 0.7)
+    );
+}
+
+.dashboard-content-grid {
+  margin-top: 12px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(260px, 0.8fr);
+  gap: 12px;
+}
+
+.dashboard-panel {
+  min-height: 335px;
+  padding: 25px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background: rgba(16, 18, 17, 0.57);
+}
+
+.panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.panel-heading h2,
+.quick-panel h2 {
+  margin: 7px 0 0;
+  color: #e7e9e5;
+  font-size: 18px;
+  letter-spacing: -0.035em;
+}
+
+.text-action {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 7px 9px;
+
+  background: transparent;
+  color: var(--accent);
+
+  font-size: 9px;
+}
+
+.text-action:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+  background: rgba(201, 255, 61, 0.055);
+}
+
+.empty-state {
+  min-height: 245px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(201, 255, 61, 0.16);
+  border-radius: 12px;
+
+  background: rgba(201, 255, 61, 0.045);
+  color: var(--accent);
+}
+
+.empty-state h3 {
+  margin: 15px 0 5px;
+  font-size: 13px;
+}
+
+.empty-state p {
+  margin: 0;
+  color: #5e645f;
+  font-size: 9px;
+}
+
+.empty-action {
+  width: auto;
+  height: auto;
+  margin-top: 16px;
+  padding: 8px 11px;
+
+  background: transparent;
+  color: var(--accent);
+
+  font-size: 9px;
+}
+
+.invite-list {
+  margin-top: 18px;
+}
+
+.invite-row {
+  min-height: 55px;
+  padding: 10px 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.invite-row > div:first-child {
+  display: flex;
+  flex-direction: column;
+}
+
+.invite-row strong {
+  color: #d9dcd7;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.invite-row > div:first-child span {
+  margin-top: 4px;
+  color: #505550;
+  font-size: 8px;
+}
+
+.invite-row-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-pill {
+  padding: 5px 8px;
+  border-radius: 999px;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.status-unused {
+  background: rgba(201, 255, 61, 0.08);
+  color: var(--accent);
+}
+
+.status-activated {
+  background: rgba(120, 180, 255, 0.08);
+  color: #8db9ed;
+}
+
+.status-disabled,
+.status-expired {
+  background: rgba(255, 255, 255, 0.045);
+  color: #6b706c;
+}
+
+.copy-button {
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 6px 8px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 7px;
+
+  background: transparent;
+  color: #777c78;
+
+  font-size: 8px;
+}
+
+.copy-button:hover:not(:disabled) {
+  transform: none;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.quick-panel > p {
+  margin: 15px 0 27px;
+  max-width: 300px;
+
+  color: #666c67;
+  font-size: 10px;
+  line-height: 1.65;
+}
+
+.quick-steps {
+  display: grid;
+  gap: 15px;
+}
+
+.quick-steps div {
+  display: grid;
+  grid-template-columns: 31px 1fr;
+  gap: 10px;
+  align-items: start;
+}
+
+.quick-steps span {
+  color: var(--accent);
+  font-size: 8px;
+  font-weight: 800;
+}
+
+.quick-steps p {
+  margin: 0;
+  color: #969b96;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (max-width: 1000px) {
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .trainer-dashboard {
+    display: block;
+  }
+
+  .dashboard-sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    padding: 20px 22px;
+
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .dashboard-nav {
+    display: none;
+  }
+
+  .sidebar-profile {
+    width: auto;
+  }
+
+  .sidebar-profile div:last-child {
+    display: none;
+  }
+
+  .dashboard-main {
+    padding: 27px 22px 45px;
+  }
+
+  .dashboard-header {
+    align-items: flex-start;
+  }
+
+  .dashboard-header h1 {
+    font-size: 39px;
+  }
+
+  .new-invite-button {
+    min-width: 44px;
+    width: 44px;
+    padding: 0;
+    font-size: 0;
+  }
+
+  .new-invite-button span {
+    font-size: 18px;
+  }
+
+  .dashboard-stats {
+    margin-top: 30px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stat-card {
+    min-height: 120px;
+    padding: 17px;
+  }
+
+  .dashboard-panel {
+    padding: 20px;
+  }
+}
+
+.client-login-error {
+  margin-top: 11px;
+  padding: 11px 13px;
+
+  border: 1px solid rgba(255, 104, 104, 0.18);
+  border-radius: 10px;
+
+  background: rgba(255, 104, 104, 0.05);
+  color: #e5a0a0;
+
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT ACTIVATION
+   ========================================================= */
+
+.activation-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #090a0a;
+}
+
+.activation-page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 30px 38px 26px;
+
+  background:
+    radial-gradient(
+      circle at 80% 25%,
+      rgba(201, 255, 61, 0.055),
+      transparent 32%
+    ),
+    #090a0a;
+
+  isolation: isolate;
+}
+
+.activation-glow {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+
+  top: 18%;
+  right: -170px;
+
+  border-radius: 999px;
+
+  background: rgba(201, 255, 61, 0.045);
+  filter: blur(100px);
+
+  pointer-events: none;
+  z-index: -1;
+}
+
+.activation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.activation-step {
+  color: #555b57;
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.activation-container {
+  width: min(100%, 480px);
+
+  margin: auto;
+  padding: 35px 0 55px;
+}
+
+.activation-progress {
+  width: 100%;
+  height: 2px;
+
+  margin-bottom: 35px;
+
+  overflow: hidden;
+  border-radius: 99px;
+
+  background: rgba(255, 255, 255, 0.055);
+}
+
+.activation-progress span {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  background: var(--accent);
+
+  box-shadow: 0 0 12px rgba(201, 255, 61, 0.35);
+}
+
+.activation-title {
+  font-size: clamp(45px, 7vw, 64px);
+}
+
+.activation-intro {
+  margin: 23px 0 36px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.activation-form {
+  width: 100%;
+}
+
+.activation-field label {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: #adb2ae;
+
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.activation-field input {
+  height: 57px;
+
+  font-size: 13px;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+.activation-row {
+  display: grid;
+  grid-template-columns: 105px 1fr;
+
+  gap: 11px;
+
+  margin-top: 16px;
+}
+
+.phone-input {
+  height: 57px;
+
+  display: flex;
+  align-items: center;
+
+  overflow: hidden;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  background: rgba(18, 20, 19, 0.82);
+}
+
+.phone-input:focus-within {
+  border-color: rgba(201, 255, 61, 0.4);
+}
+
+.phone-input > span {
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 13px;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #7c827d;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.phone-input input {
+  height: 100%;
+
+  padding-left: 13px;
+
+  border: 0;
+  border-radius: 0;
+
+  background: transparent;
+}
+
+.phone-input input:focus {
+  border: 0;
+  background: transparent;
+}
+
+.activation-button {
+  margin-top: 18px;
+  height: 58px;
+}
+
+.activation-note {
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 7px;
+
+  color: #4e544f;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.activation-note span {
+  color: var(--accent);
+  font-size: 6px;
+}
+
+@media (max-width: 650px) {
+  .activation-page {
+    padding: 24px 22px 21px;
+  }
+
+  .activation-container {
+    padding: 38px 0 30px;
+  }
+
+  .activation-progress {
+    margin-bottom: 29px;
+  }
+
+  .activation-title {
+    font-size: clamp(43px, 13vw, 57px);
+    line-height: 0.98;
+  }
+
+  .activation-intro {
+    margin: 21px 0 32px;
+  }
+
+  .activation-desktop-break {
+    display: none;
+  }
+
+  .activation-row {
+    grid-template-columns: 92px 1fr;
+  }
+}
+
+@media (max-width: 350px) {
+  .activation-row {
+    grid-template-columns: 1fr;
+  }
+
+  .age-field {
+    max-width: 110px;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT HOME
+   ========================================================= */
+
+.client-home-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #090a0a;
+}
+
+.client-home-page {
+  position: relative;
+  min-height: 100dvh;
+  overflow-x: hidden;
+
+  padding:
+    26px
+    22px
+    calc(110px + env(safe-area-inset-bottom));
+
+  background:
+    radial-gradient(
+      circle at 85% 10%,
+      rgba(201, 255, 61, 0.07),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+
+  isolation: isolate;
+}
+
+.client-home-glow {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.client-home-glow-one {
+  width: 260px;
+  height: 260px;
+
+  top: 40px;
+  right: -150px;
+
+  background: rgba(201, 255, 61, 0.07);
+}
+
+.client-home-glow-two {
+  width: 220px;
+  height: 220px;
+
+  top: 520px;
+  left: -170px;
+
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.client-home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.client-home-brand {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.client-home-brand::first-letter {
+  color: var(--text);
+}
+
+.client-home-tagline {
+  margin-top: 2px;
+
+  color: #555b57;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.client-avatar {
+  width: 39px;
+  height: 39px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(201, 255, 61, 0.2);
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(201, 255, 61, 0.16),
+      rgba(201, 255, 61, 0.03)
+    );
+
+  color: var(--accent);
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.client-home-hero {
+  margin-top: 56px;
+}
+
+.client-home-eyebrow {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-bottom: 18px;
+
+  color: #777d78;
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.client-home-eyebrow span {
+  width: 5px;
+  height: 5px;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+
+  box-shadow: 0 0 10px rgba(201, 255, 61, 0.65);
+}
+
+.client-home-hero h1 {
+  margin: 0;
+
+  font-size: clamp(42px, 12vw, 57px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.client-home-hero h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-home-hero p {
+  margin: 20px 0 0;
+
+  color: #868c87;
+
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.client-today-card {
+  margin-top: 36px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  min-height: 126px;
+
+  padding: 21px;
+
+  border: 1px solid rgba(201, 255, 61, 0.15);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      140deg,
+      rgba(201, 255, 61, 0.08),
+      rgba(17, 19, 18, 0.92) 52%
+    );
+}
+
+.client-card-label {
+  margin-bottom: 10px;
+
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.client-today-card h2 {
+  margin: 0;
+
+  font-size: 17px;
+  letter-spacing: -0.03em;
+}
+
+.client-today-card p {
+  margin: 6px 0 0;
+
+  color: #777d78;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.client-today-icon {
+  width: 37px;
+  height: 37px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  margin-left: 14px;
+
+  border-radius: 50%;
+
+  background: var(--accent);
+  color: #0b0c0b;
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.client-section {
+  margin-top: 37px;
+}
+
+.client-section-title {
+  margin-bottom: 13px;
+
+  color: #5e645f;
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.client-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+.client-nav-card {
+  position: relative;
+
+  min-height: 175px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 16px;
+
+  text-align: left;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.035),
+      rgba(255, 255, 255, 0.012)
+    );
+
+  color: var(--text);
+}
+
+.client-nav-card-featured {
+  border-color: rgba(201, 255, 61, 0.16);
+}
+
+.client-nav-number {
+  color: #444945;
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.client-nav-content > span {
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.client-nav-content h3 {
+  margin: 6px 0 0;
+
+  font-size: 15px;
+  letter-spacing: -0.025em;
+}
+
+.client-nav-content p {
+  margin: 7px 0 0;
+
+  color: #6d736e;
+
+  font-size: 9px;
+  line-height: 1.45;
+}
+
+.client-nav-arrow {
+  position: absolute;
+
+  top: 14px;
+  right: 14px;
+
+  color: #5d635e;
+
+  font-size: 14px;
+}
+
+.client-bottom-nav {
+  position: fixed;
+
+  left: 50%;
+  bottom: 13px;
+
+  width: calc(100% - 26px);
+  max-width: 430px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  padding:
+    10px
+    6px
+    calc(8px + env(safe-area-inset-bottom));
+
+  transform: translateX(-50%);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+
+  background: rgba(14, 16, 15, 0.92);
+
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.48);
+
+  backdrop-filter: blur(18px);
+
+  z-index: 20;
+}
+
+.client-bottom-nav button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 4px 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #59605a;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.client-bottom-nav button span {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.client-bottom-nav button.active {
+  color: var(--accent);
+}
+
+@media (min-width: 700px) {
+  .client-home-page {
+    width: 430px;
+    margin: 0 auto;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — TRAINER WEEKLY WORKOUT EDITOR
+   ========================================================= */
+
+.trainer-workout-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  background: #090a0a;
+  color: var(--text);
+}
+
+.trainer-workout-page {
+  min-height: 100dvh;
+  padding: 40px 24px 80px;
+
+  background:
+    radial-gradient(
+      circle at 85% 0%,
+      rgba(201, 255, 61, 0.05),
+      transparent 30%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.trainer-workout-header {
+  width: min(100%, 900px);
+  margin: 0 auto 42px;
+}
+
+.trainer-workout-eyebrow {
+  margin-bottom: 12px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.trainer-workout-header h1 {
+  margin: 0;
+
+  font-size: clamp(38px, 6vw, 62px);
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+
+.trainer-workout-days {
+  width: min(100%, 900px);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+
+  margin: 0 auto;
+}
+
+.trainer-day-card {
+  padding: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.trainer-day-heading {
+  margin-bottom: 17px;
+
+  color: var(--accent);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.trainer-column-labels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 90px 110px 40px;
+
+  gap: 9px;
+
+  padding: 0 4px 7px;
+
+  color: #616762;
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.trainer-day-rows {
+  display: flex;
+  flex-direction: column;
+
+  gap: 9px;
+}
+
+.trainer-workout-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 90px 110px 40px;
+
+  gap: 9px;
+
+  align-items: center;
+}
+
+.trainer-workout-row input {
+  width: 100%;
+  height: 46px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.trainer-workout-row input:focus {
+  border-color: rgba(201, 255, 61, 0.4);
+}
+
+.trainer-row-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 46px;
+}
+
+.trainer-add-row,
+.trainer-delete-row {
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border-radius: 50%;
+
+  font-size: 20px;
+  line-height: 1;
+}
+
+.trainer-add-row {
+  border: 0;
+
+  background: var(--accent);
+  color: #090a0a;
+}
+
+.trainer-delete-row {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #7d837e;
+}
+
+.trainer-workout-save-area {
+  width: min(100%, 900px);
+
+  margin: 34px auto 0;
+}
+
+.trainer-save-message {
+  margin-bottom: 10px;
+
+  color: var(--accent);
+
+  font-size: 11px;
+}
+
+.trainer-save-plan {
+  width: 100%;
+  height: 58px;
+
+  border: 0;
+  border-radius: 15px;
+
+  background: var(--accent);
+  color: #090a0a;
+
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.trainer-save-plan:disabled {
+  opacity: 0.6;
+}
+
+@media (max-width: 600px) {
+  .trainer-workout-page {
+    padding: 28px 16px 65px;
+  }
+
+  .trainer-day-card {
+    padding: 16px;
+  }
+
+  .trainer-column-labels,
+  .trainer-workout-row {
+    grid-template-columns:
+      minmax(0, 1fr)
+      58px
+      68px
+      34px;
+
+    gap: 6px;
+  }
+
+  .trainer-workout-row input {
+    height: 43px;
+
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+
+  .trainer-row-actions {
+  height: 43px;
+}
+  .trainer-add-row,
+  .trainer-delete-row {
+    width: 30px;
+    height: 30px;
+
+    font-size: 18px;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT WEEKLY WORKOUT PLAN
+   ========================================================= */
+
+.client-workout-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+
+  background: #090a0a;
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.client-workout-page {
+  min-height: 100dvh;
+
+  padding: 25px 20px 55px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.07),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.client-workout-header {
+  width: min(100%, 520px);
+
+  margin: 0 auto 38px;
+}
+
+.client-workout-back {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 35px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+
+  font-size: 17px;
+}
+
+.client-workout-eyebrow {
+  margin-bottom: 13px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.client-workout-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 12vw, 59px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.client-workout-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-workout-header p {
+  margin: 20px 0 0;
+
+  color: #777d78;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.client-weekly-plan {
+  width: min(100%, 520px);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  margin: 0 auto;
+}
+
+.client-workout-day {
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+.client-workout-day-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.client-workout-day-title > span:first-child {
+  color: var(--accent);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.client-workout-count {
+  color: #4f5550;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.client-workout-labels {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 55px 65px;
+
+  gap: 8px;
+
+  padding: 0 5px 8px;
+
+  color: #555b56;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.client-workout-item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 55px 65px;
+
+  gap: 8px;
+
+  align-items: center;
+
+  min-height: 54px;
+
+  padding: 0 5px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.client-workout-name {
+  padding-right: 8px;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+.client-workout-value {
+  color: #aeb3af;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.client-rest-day {
+  padding: 4px 2px 3px;
+}
+
+.client-rest-day span {
+  color: #8e948f;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.client-rest-day p {
+  margin: 5px 0 0;
+
+  color: #505651;
+
+  font-size: 9px;
+}
+
+.client-workout-footer {
+  width: min(100%, 520px);
+
+  margin: 35px auto 0;
+
+  color: #404540;
+
+  text-align: center;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+@media (min-width: 700px) {
+  .client-workout-page {
+    width: 560px;
+    margin: 0 auto;
+
+    border-left: 1px solid rgba(255, 255, 255, 0.04);
+    border-right: 1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+.activation-pin-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 11px;
+
+  margin-top: 16px;
+}
+
+.activation-pin-section input {
+  letter-spacing: 0.2em;
+}
+
+@media (max-width: 380px) {
+  .activation-pin-section {
+    grid-template-columns: 1fr;
+  }
+}
+.client-login-page {
+  position: relative;
+  min-height: 100dvh;
+
+  padding: 26px 22px;
+
+  background:
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(201, 255, 61, 0.065),
+      transparent 30%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.client-login-glow {
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  right: -150px;
+  top: 120px;
+
+  border-radius: 50%;
+
+  background: rgba(201, 255, 61, 0.04);
+  filter: blur(90px);
+
+  pointer-events: none;
+}
+
+.client-login-container {
+  width: min(100%, 480px);
+
+  margin: 12vh auto 0;
+}
+
+.client-login-title {
+  margin: 0;
+
+  font-size: clamp(43px, 12vw, 60px);
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+}
+
+.client-login-title em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-login-intro {
+  margin: 20px 0 35px;
+
+  color: #7d837e;
+
+  font-size: 12px;
+}
+
+.client-returning-form {
+  width: 100%;
+}
+
+.client-pin-login {
+  margin-top: 15px;
+}
+
+.client-pin-login input {
+  letter-spacing: 0.2em;
+}
+
+.client-back-to-invite {
+  width: 100%;
+
+  margin-top: 19px;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #686e69;
+
+  font-size: 10px;
+}
+
+.welcome-help {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.welcome-help .help-text {
+  margin: 0;
+}
+
+.existing-client-login {
+  margin-top: 9px;
+
+  border: 0;
+  background: transparent;
+
+  color: var(--accent);
+
+  font-size: 10px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.existing-client-login:hover {
+  text-decoration: underline;
+}
+
+/* =========================================================
+   FIT & GRIT — ADMIN CLIENTS
+   ========================================================= */
+
+.admin-clients-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+
+  background: #090a0a;
+  color: var(--text);
+}
+
+.admin-clients-page {
+  min-height: 100dvh;
+
+  padding: 38px 24px 70px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.06),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.admin-clients-header,
+.admin-client-list {
+  width: min(100%, 760px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.admin-clients-header {
+  margin-bottom: 38px;
+}
+
+.admin-clients-back {
+  width: 38px;
+  height: 38px;
+
+  display: grid;
+  place-items: center;
+
+  margin-bottom: 32px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.025);
+  color: var(--text);
+
+  font-size: 16px;
+}
+
+.admin-clients-eyebrow {
+  margin-bottom: 12px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.admin-clients-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 7vw, 64px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.admin-clients-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.admin-clients-header p {
+  margin: 19px 0 0;
+
+  color: #777d78;
+
+  font-size: 11px;
+}
+
+.admin-client-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.admin-client-card {
+  padding: 18px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 17px;
+
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.admin-client-main {
+  display: flex;
+  align-items: center;
+
+  gap: 13px;
+}
+
+.admin-client-avatar {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(201, 255, 61, 0.18);
+  border-radius: 50%;
+
+  background: rgba(201, 255, 61, 0.06);
+
+  color: var(--accent);
+
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.admin-client-card h2 {
+  margin: 0;
+
+  font-size: 15px;
+}
+
+.admin-client-meta {
+  margin-top: 6px;
+
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 5px;
+
+  color: #666c67;
+
+  font-size: 9px;
+}
+
+.admin-open-client {
+  min-width: 130px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 15px;
+
+  padding: 11px 13px;
+
+  border: 1px solid rgba(201, 255, 61, 0.13);
+  border-radius: 11px;
+
+  background: rgba(201, 255, 61, 0.045);
+
+  color: var(--accent);
+
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.admin-no-clients {
+  padding: 35px 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 17px;
+
+  text-align: center;
+
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.admin-no-clients span {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.admin-no-clients p {
+  margin: 7px 0 0;
+
+  color: #666c67;
+
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .admin-clients-page {
+    padding: 27px 17px 60px;
+  }
+
+  .admin-client-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-open-client {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — MOBILE ADMIN MENU
+   ========================================================= */
+
+.mobile-admin-menu-button {
+  display: none;
+}
+
+.mobile-admin-overlay {
+  display: none;
+}
+
+.mobile-admin-profile {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .mobile-admin-menu-button {
+    position: fixed;
+
+    top: 22px;
+    left: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    z-index: 70;
+
+    padding: 0;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 12px;
+
+    background: rgba(13, 15, 14, 0.9);
+
+    color: #f4f4ef;
+
+    font-size: 18px;
+    line-height: 1;
+
+    box-shadow:
+      0 10px 35px rgba(0, 0, 0, 0.3);
+
+    backdrop-filter: blur(14px);
+  }
+
+  .mobile-admin-overlay {
+    position: fixed;
+    inset: 0;
+
+    display: block;
+
+    z-index: 100;
+
+    background: rgba(0, 0, 0, 0.67);
+
+    backdrop-filter: blur(4px);
+  }
+
+  .mobile-admin-drawer {
+    width: min(82vw, 300px);
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: auto;
+overflow-x: hidden;
+
+    padding:
+      24px
+      18px
+      calc(22px + env(safe-area-inset-bottom));
+
+    border-right:
+      1px solid rgba(255, 255, 255, 0.07);
+
+    background:
+      radial-gradient(
+        circle at 20% 0%,
+        rgba(201, 255, 61, 0.055),
+        transparent 25%
+      ),
+      #0b0d0b;
+
+    box-shadow:
+      22px 0 70px rgba(0, 0, 0, 0.55);
+  }
+
+  .mobile-admin-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 39px;
+  }
+
+  .mobile-admin-close {
+    width: 35px;
+    height: 35px;
+
+    display: grid;
+    place-items: center;
+
+    padding-left: 10px;
+
+    border:
+      1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+
+    background: transparent;
+
+    color: #777d78;
+
+    font-size: 21px;
+    line-height: 1;
+  }
+
+  .mobile-admin-nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+  }
+
+  .mobile-admin-nav button {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    min-height: 46px;
+
+    padding: 0 13px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: #838984;
+
+    text-align: left;
+
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .mobile-admin-nav button.active {
+    background: rgba(201, 255, 61, 0.075);
+    color: #f4f4ef;
+  }
+
+  .mobile-admin-nav button > span {
+    width: 18px;
+
+    flex-shrink: 0;
+
+    color: var(--accent);
+
+    text-align: center;
+
+    font-size: 14px;
+  }
+
+  .mobile-admin-nav button small {
+    margin-left: auto;
+
+    color: #484d49;
+
+    font-size: 7px;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+  }
+
+  .mobile-admin-divider {
+    height: 1px;
+
+    margin: 13px 0;
+
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-admin-muted {
+    opacity: 0.43;
+  }
+
+  .mobile-admin-profile {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-top: 28px;
+    margin-bottom: 10px;
+
+    padding: 14px 11px;
+
+    border-top:
+      1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .mobile-admin-profile > div:last-child {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+  }
+
+  .mobile-admin-profile strong {
+    color: #e8e9e5;
+
+    font-size: 10px;
+  }
+
+  .mobile-admin-profile span {
+    color: #555b56;
+
+    font-size: 8px;
+  }
+
+  .mobile-admin-signout {
+    width: 100%;
+
+    flex-shrink: 0;
+    margin-bottom: 8px;
+
+    padding: 13px;
+
+    border:
+      1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.02);
+
+    color: #767c77;
+
+    font-size: 10px;
+    font-weight: 700;
+  }
+}
+
+/* =========================================================
+   MOBILE ADMIN HEADER CLEANUP
+   ========================================================= */
+
+.mobile-admin-topbar {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  /* Hide the old desktop sidebar completely on mobile */
+  .dashboard-sidebar {
+    display: none !important;
+  }
+
+  /* Our proper mobile header */
+  .mobile-admin-topbar {
+    position: absolute;
+
+    top: 23px;
+    left: 20px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    z-index: 70;
+  }
+
+  .mobile-admin-menu-button {
+    position: static;
+
+    width: 38px;
+    height: 38px;
+
+    display: grid;
+    place-items: center;
+
+    padding-left: 10px;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 11px;
+
+    background: rgba(15, 17, 16, 0.9);
+
+    color: #dfe2dc;
+
+    font-size: 17px;
+    line-height: 1;
+
+    box-shadow: none;
+  }
+
+  .mobile-admin-brand {
+    color: #f4f4ef;
+
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+  }
+
+  .mobile-admin-brand span {
+    color: var(--accent);
+  }
+
+  /* Give the dashboard content enough room below the new header */
+  .dashboard-main {
+    padding-top: 105px;
+  }
+
+  /* Remove any leftover desktop profile button */
+  .sidebar-profile {
+    display: none !important;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — TRAINER DIET EDITOR
+   ========================================================= */
+
+.trainer-diet-column-labels {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 40px;
+
+  gap: 9px;
+
+  padding: 0 4px 7px;
+
+  color: #616762;
+
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.trainer-diet-row {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr) 40px;
+
+  gap: 9px;
+
+  align-items: center;
+}
+
+.trainer-diet-row input {
+  width: 100%;
+  height: 46px;
+
+  padding: 0 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 11px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.trainer-diet-row input:focus {
+  border-color: rgba(201, 255, 61, 0.4);
+}
+
+@media (max-width: 600px) {
+  .trainer-diet-column-labels,
+  .trainer-diet-row {
+    grid-template-columns:
+      92px
+      minmax(0, 1fr)
+      34px;
+
+    gap: 6px;
+  }
+
+  .trainer-diet-row input {
+    height: 43px;
+
+    padding: 0 9px;
+
+    font-size: 11px;
+  }
+}
+
+.admin-client-actions {
+  display: flex;
+  gap: 9px;
+}
+
+.admin-open-client-secondary {
+  border-color: rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: #a7ada8;
+}
+
+@media (max-width: 600px) {
+  .admin-client-actions {
+    width: 100%;
+
+    flex-direction: column;
+  }
+
+  .admin-client-actions .admin-open-client {
+    width: 100%;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT DIET PLAN
+   ========================================================= */
+
+.client-diet-loading {
+  min-height: 100dvh;
+
+  display: grid;
+  place-items: center;
+
+  background: #090a0a;
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.client-diet-page {
+  min-height: 100dvh;
+
+  padding: 25px 20px 55px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.07),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.client-diet-header {
+  width: min(100%, 520px);
+
+  margin: 0 auto 38px;
+}
+
+.client-diet-eyebrow {
+  margin-bottom: 13px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.client-diet-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 12vw, 59px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.client-diet-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-diet-header p {
+  margin: 20px 0 0;
+
+  color: #777d78;
+
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+.client-diet-plan {
+  width: min(100%, 520px);
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 16px;
+
+  margin: 0 auto;
+}
+
+.client-diet-day {
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 18px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+.client-diet-day-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.client-diet-day-title > span:first-child {
+  color: var(--accent);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.client-diet-count {
+  color: #4f5550;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.client-diet-labels {
+  display: grid;
+  grid-template-columns: 95px minmax(0, 1fr);
+
+  gap: 10px;
+
+  padding: 0 5px 8px;
+
+  color: #555b56;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+}
+
+.client-diet-item {
+  display: grid;
+  grid-template-columns: 95px minmax(0, 1fr);
+
+  gap: 10px;
+
+  align-items: start;
+
+  padding: 14px 5px;
+
+  border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+.client-diet-meal {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.client-diet-details {
+  color: #aeb3af;
+
+  font-size: 10px;
+  line-height: 1.5;
+
+  overflow-wrap: anywhere;
+}
+
+.client-diet-empty {
+  padding: 4px 2px 3px;
+}
+
+.client-diet-empty span {
+  color: #8e948f;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.client-diet-empty p {
+  margin: 5px 0 0;
+
+  color: #505651;
+
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+@media (min-width: 700px) {
+  .client-diet-page {
+    width: 560px;
+
+    margin: 0 auto;
+
+    border-left:
+      1px solid rgba(255, 255, 255, 0.04);
+
+    border-right:
+      1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT PROFILE
+   ========================================================= */
+
+.client-profile-loading {
+  min-height: 100dvh;
+
+  display: grid;
+  place-items: center;
+
+  background: #090a0a;
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.client-profile-page {
+  min-height: 100dvh;
+
+  padding: 25px 20px 55px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.07),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.client-profile-header {
+  width: min(100%, 520px);
+
+  margin: 0 auto 38px;
+}
+
+.client-profile-eyebrow {
+  margin-bottom: 13px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.client-profile-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 12vw, 59px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.client-profile-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-profile-card {
+  width: min(100%, 520px);
+
+  margin: 0 auto;
+
+  padding: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+.client-profile-identity {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding-bottom: 19px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.06);
+}
+
+.client-profile-avatar {
+  width: 52px;
+  height: 52px;
+
+  flex-shrink: 0;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(201, 255, 61, 0.2);
+  border-radius: 50%;
+
+  background: rgba(201, 255, 61, 0.07);
+
+  color: var(--accent);
+
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.client-profile-identity h2 {
+  margin: 0;
+
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+
+.client-profile-identity span {
+  display: block;
+
+  margin-top: 5px;
+
+  color: #646a65;
+
+  font-size: 9px;
+}
+
+.client-profile-details {
+  margin-top: 7px;
+}
+
+.client-profile-row {
+  min-height: 58px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.05);
+}
+
+.client-profile-row:last-child {
+  border-bottom: 0;
+}
+
+.client-profile-row > span {
+  color: #555b56;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+}
+
+.client-profile-row strong {
+  color: #d8dbd6;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  text-align: right;
+}
+
+.client-profile-security {
+  width: min(100%, 520px);
+
+  margin: 16px auto 0;
+
+  padding: 20px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 19px;
+
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.client-profile-section-label {
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.client-profile-security h3 {
+  margin: 7px 0 0;
+
+  font-size: 15px;
+}
+
+.client-profile-security p {
+  margin: 8px 0 0;
+
+  color: #656b66;
+
+  font-size: 9px;
+  line-height: 1.55;
+}
+
+.client-profile-logout {
+  width: 100%;
+  height: 48px;
+
+  margin-top: 20px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.025);
+
+  color: #b8bdb9;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.client-profile-logout:disabled {
+  opacity: 0.5;
+}
+
+.client-profile-footer {
+  width: min(100%, 520px);
+
+  margin: 32px auto 0;
+
+  color: #404540;
+
+  text-align: center;
+
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+@media (min-width: 700px) {
+  .client-profile-page {
+    width: 560px;
+
+    margin: 0 auto;
+
+    border-left:
+      1px solid rgba(255, 255, 255, 0.04);
+
+    border-right:
+      1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — CLIENT CALENDAR
+   ========================================================= */
+
+.client-calendar-loading {
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+
+  background: #090a0a;
+  color: var(--text);
+
+  font-size: 12px;
+}
+
+.client-calendar-page {
+  min-height: 100dvh;
+
+  padding: 25px 20px 60px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.07),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.client-calendar-header,
+.calendar-card,
+.calendar-notes-card {
+  width: min(100%, 520px);
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.client-calendar-header {
+  margin-bottom: 34px;
+}
+
+.client-calendar-eyebrow {
+  margin-bottom: 13px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.17em;
+}
+
+.client-calendar-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 12vw, 59px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.client-calendar-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.client-calendar-header p {
+  margin: 19px 0 0;
+
+  color: #777d78;
+
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.calendar-card {
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+.calendar-month-header {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+
+  align-items: center;
+
+  margin-bottom: 18px;
+}
+
+.calendar-month-header strong {
+  text-align: center;
+
+  font-size: 13px;
+  letter-spacing: -0.02em;
+}
+
+.calendar-month-header button {
+  width: 32px;
+  height: 32px;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.02);
+  color: #8c928d;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+
+  gap: 6px;
+}
+
+.calendar-weekdays {
+  margin-bottom: 8px;
+
+  color: #4f5550;
+
+  font-size: 7px;
+  font-weight: 800;
+
+  text-align: center;
+}
+
+.calendar-empty-cell,
+.calendar-day {
+  aspect-ratio: 1;
+}
+
+.calendar-day {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  padding: 0;
+
+  border: 1px solid transparent;
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.018);
+
+  color: #969c97;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.calendar-day:hover {
+  border-color: rgba(201, 255, 61, 0.16);
+}
+
+.calendar-day.today {
+  border-color: rgba(201, 255, 61, 0.25);
+}
+
+.calendar-day.worked-out {
+  background: var(--accent);
+  color: #090a0a;
+
+  box-shadow:
+    0 0 18px rgba(201, 255, 61, 0.08);
+}
+
+.calendar-day.selected:not(.worked-out) {
+  border-color: rgba(201, 255, 61, 0.45);
+
+  background: rgba(201, 255, 61, 0.055);
+}
+
+.calendar-day.future {
+  opacity: 0.28;
+
+  cursor: default;
+}
+
+.calendar-day small {
+  position: absolute;
+
+  right: 5px;
+  bottom: 3px;
+
+  font-size: 6px;
+  font-weight: 900;
+}
+
+.calendar-legend {
+  display: flex;
+  gap: 16px;
+
+  margin-top: 16px;
+
+  color: #555b56;
+
+  font-size: 7px;
+}
+
+.calendar-legend span {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.calendar-legend i {
+  width: 7px;
+  height: 7px;
+
+  display: inline-block;
+
+  border-radius: 50%;
+}
+
+.legend-workout {
+  background: var(--accent);
+}
+
+.legend-today {
+  border: 1px solid var(--accent);
+}
+
+.calendar-notes-card {
+  margin-top: 16px;
+
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 19px;
+
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.calendar-note-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 15px;
+
+  margin-bottom: 15px;
+}
+
+.calendar-note-heading > div > span {
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.calendar-note-heading h2 {
+  margin: 6px 0 0;
+
+  font-size: 14px;
+  letter-spacing: -0.02em;
+}
+
+.private-pill {
+  flex-shrink: 0;
+
+  padding: 5px 8px;
+
+  border: 1px solid rgba(201, 255, 61, 0.12);
+  border-radius: 999px;
+
+  background: rgba(201, 255, 61, 0.04);
+
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 700;
+}
+
+.calendar-notes-card textarea {
+  width: 100%;
+  min-height: 120px;
+
+  resize: vertical;
+
+  padding: 13px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+
+  outline: none;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: #d8dbd6;
+
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.calendar-notes-card textarea:focus {
+  border-color: rgba(201, 255, 61, 0.35);
+}
+
+.calendar-note-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 10px;
+}
+
+.calendar-note-footer > span {
+  color: #4e544f;
+
+  font-size: 7px;
+}
+
+.calendar-note-footer button {
+  width: auto;
+  min-width: 110px;
+
+  padding: 9px 16px;
+
+  border: 0;
+  border-radius: 9px;
+
+  background: var(--accent);
+  color: #090a0a;
+
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.calendar-note-footer button:disabled {
+  opacity: 0.5;
+}
+
+.calendar-note-message {
+  margin-top: 9px;
+
+  color: var(--accent);
+
+  font-size: 8px;
+}
+
+@media (min-width: 700px) {
+  .client-calendar-page {
+    width: 560px;
+
+    margin: 0 auto;
+
+    border-left:
+      1px solid rgba(255, 255, 255, 0.04);
+
+    border-right:
+      1px solid rgba(255, 255, 255, 0.04);
+  }
+}
+
+/* =========================================================
+   CALENDAR UX + ALIGNMENT FIXES
+   ========================================================= */
+
+.calendar-card {
+  padding: 20px 18px;
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  width: 100%;
+
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+
+  column-gap: 5px;
+  row-gap: 7px;
+}
+
+.calendar-weekdays span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 0;
+}
+
+.calendar-day {
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  justify-self: center;
+}
+
+.calendar-day span {
+  display: block;
+
+  width: 100%;
+
+  text-align: center;
+}
+
+.calendar-empty-cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.calendar-selected-card {
+  width: min(100%, 520px);
+
+  margin: 16px auto 0;
+
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 19px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.025),
+      rgba(255, 255, 255, 0.01)
+    );
+}
+
+.calendar-selected-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  margin-bottom: 15px;
+}
+
+.calendar-selected-heading > div > span {
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.calendar-selected-heading h2 {
+  margin: 6px 0 0;
+
+  font-size: 14px;
+}
+
+.calendar-complete-pill {
+  flex-shrink: 0;
+
+  padding: 6px 9px;
+
+  border-radius: 999px;
+
+  background: rgba(201, 255, 61, 0.1);
+
+  color: var(--accent);
+
+  font-size: 7px;
+  font-weight: 800;
+}
+
+.calendar-workout-button {
+  width: 100%;
+  min-height: 50px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 0 15px;
+
+  border: 1px solid rgba(201, 255, 61, 0.18);
+  border-radius: 12px;
+
+  background: var(--accent);
+  color: #090a0a;
+
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.calendar-workout-button.completed {
+  border-color: rgba(201, 255, 61, 0.17);
+
+  background: rgba(201, 255, 61, 0.06);
+
+  color: var(--accent);
+}
+
+.calendar-workout-button.completed span:last-child {
+  color: #747b75;
+
+  font-size: 8px;
+}
+
+.calendar-future-message {
+  padding: 14px;
+
+  border-radius: 11px;
+
+  background: rgba(255, 255, 255, 0.02);
+
+  color: #656b66;
+
+  font-size: 9px;
+}
+
+.calendar-note-helper {
+  margin: -4px 0 13px;
+
+  color: #5e645f;
+
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+.calendar-notes-card textarea {
+  display: block;
+  box-sizing: border-box;
+
+  margin: 0;
+
+  min-height: 115px;
+}
+
+.calendar-note-footer {
+  width: 100%;
+}
+
+@media (max-width: 380px) {
+  .calendar-card {
+    padding: 17px 13px;
+  }
+
+  .calendar-weekdays,
+  .calendar-grid {
+    column-gap: 4px;
+    row-gap: 6px;
+  }
+
+  .calendar-day {
+    border-radius: 9px;
+  }
+}
+
+/* =========================================================
+   FIT & GRIT — TRAINER ATTENDANCE
+   ========================================================= */
+
+.trainer-attendance-page {
+  min-height: 100dvh;
+
+  padding: 38px 24px 70px;
+
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(201, 255, 61, 0.06),
+      transparent 28%
+    ),
+    #090a0a;
+
+  color: var(--text);
+}
+
+.trainer-attendance-header,
+.trainer-attendance-summary,
+.trainer-attendance-page .calendar-card {
+  width: min(100%, 760px);
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trainer-attendance-header {
+  margin-bottom: 28px;
+}
+
+.trainer-attendance-header h1 {
+  margin: 0;
+
+  font-size: clamp(43px, 7vw, 64px);
+  line-height: 0.96;
+  letter-spacing: -0.055em;
+}
+
+.trainer-attendance-header h1 em {
+  color: var(--accent);
+
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+}
+
+.trainer-attendance-header p {
+  margin: 18px 0 0;
+
+  color: #777d78;
+
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.trainer-attendance-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  gap: 12px;
+
+  margin-bottom: 16px;
+}
+
+.trainer-attendance-summary > div {
+  padding: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 17px;
+
+  background: rgba(255, 255, 255, 0.018);
+}
+
+.trainer-attendance-summary span {
+  color: #5d635e;
+
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.trainer-attendance-summary strong {
+  display: block;
+
+  margin-top: 11px;
+
+  color: var(--text);
+
+  font-size: 28px;
+}
+
+.trainer-attendance-summary p {
+  margin: 5px 0 0;
+
+  color: #626863;
+
+  font-size: 9px;
+}
+
+@media (max-width: 600px) {
+  .trainer-attendance-page {
+    padding: 28px 16px 60px;
+  }
 }
