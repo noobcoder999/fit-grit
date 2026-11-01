@@ -10,6 +10,12 @@ type WorkoutRow = {
   reps: string;
 };
 
+type WorkoutOption = {
+  id: string;
+  name: string;
+  trainer_id: string | null;
+};
+
 type WeeklyPlan = {
   monday: WorkoutRow[];
   tuesday: WorkoutRow[];
@@ -46,27 +52,82 @@ const days: Array<keyof WeeklyPlan> = [
   "sunday",
 ];
 
+const setOptions = [
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+];
+
+const repOptions = [
+  "5",
+  "6",
+  "8",
+  "10",
+  "12",
+  "15",
+  "20",
+  "25",
+  "6-8",
+  "8-10",
+  "10-12",
+  "12-15",
+  "15-20",
+  "AMRAP",
+  "To failure",
+];
+
 export default function ClientWorkoutPage() {
   const params = useParams();
   const router = useRouter();
 
   const clientId = params.id as string;
-
   const supabase = createClient();
 
+  const [trainerId, setTrainerId] = useState("");
   const [clientName, setClientName] = useState("");
   const [plan, setPlan] = useState<WeeklyPlan>(emptyPlan());
+
+  const [workoutOptions, setWorkoutOptions] = useState<
+    WorkoutOption[]
+  >([]);
+
+  const [showCustomWorkout, setShowCustomWorkout] =
+    useState(false);
+
+  const [customWorkoutName, setCustomWorkoutName] =
+    useState("");
+
+  const [addingWorkout, setAddingWorkout] =
+    useState(false);
+
+  const [customWorkoutMessage, setCustomWorkoutMessage] =
+    useState("");
 
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
+  async function loadWorkoutLibrary() {
+    const { data, error } = await supabase
+      .from("workout_library")
+      .select("id, name, trainer_id")
+      .order("name");
+
+    if (error) {
+      console.error("Workout library error:", error);
+      return;
+    }
+
+    setWorkoutOptions(data || []);
+  }
+
   useEffect(() => {
     async function loadData() {
-      // ---------------------------------------------------
-      // 1. Check who is logged in
-      // ---------------------------------------------------
-
       const {
         data: { user },
         error: userError,
@@ -77,9 +138,7 @@ export default function ClientWorkoutPage() {
         return;
       }
 
-      // ---------------------------------------------------
-      // 2. Make sure logged-in user is actually a trainer
-      // ---------------------------------------------------
+      setTrainerId(user.id);
 
       const {
         data: trainerProfile,
@@ -96,17 +155,9 @@ export default function ClientWorkoutPage() {
         trainerProfile.role !== "admin"
       ) {
         await supabase.auth.signOut();
-
         router.replace("/admin");
         return;
       }
-
-      // ---------------------------------------------------
-      // 3. Load requested client
-      //
-      // Our Supabase RLS already makes sure the trainer
-      // can only read clients belonging to THEIR invites.
-      // ---------------------------------------------------
 
       const {
         data: profile,
@@ -123,13 +174,9 @@ export default function ClientWorkoutPage() {
         return;
       }
 
-      if (profile.full_name) {
-        setClientName(profile.full_name);
-      }
+      setClientName(profile.full_name || "Client");
 
-      // ---------------------------------------------------
-      // 4. Load this client's weekly workout plan
-      // ---------------------------------------------------
+      await loadWorkoutLibrary();
 
       const {
         data: existingPlan,
@@ -172,6 +219,62 @@ export default function ClientWorkoutPage() {
 
     loadData();
   }, [clientId, router, supabase]);
+
+  async function addCustomWorkout() {
+    const cleanName = customWorkoutName.trim();
+
+    if (cleanName.length < 2) {
+      setCustomWorkoutMessage(
+        "Enter a workout name."
+      );
+      return;
+    }
+
+    if (!trainerId) return;
+
+    const alreadyExists = workoutOptions.some(
+      (workout) =>
+        workout.name.toLowerCase() ===
+        cleanName.toLowerCase()
+    );
+
+    if (alreadyExists) {
+      setCustomWorkoutMessage(
+        "That workout already exists."
+      );
+      return;
+    }
+
+    setAddingWorkout(true);
+    setCustomWorkoutMessage("");
+
+    const { error } = await supabase
+      .from("workout_library")
+      .insert({
+        name: cleanName,
+        trainer_id: trainerId,
+      });
+
+    if (error) {
+      console.error(
+        "Custom workout error:",
+        error
+      );
+
+      setCustomWorkoutMessage(
+        "Could not add workout."
+      );
+
+      setAddingWorkout(false);
+      return;
+    }
+
+    await loadWorkoutLibrary();
+
+    setCustomWorkoutName("");
+    setCustomWorkoutMessage("Workout added.");
+    setAddingWorkout(false);
+  }
 
   function updateRow(
     day: keyof WeeklyPlan,
@@ -280,9 +383,7 @@ export default function ClientWorkoutPage() {
     });
 
     setPlan(displayPlan);
-
     setMessage("Weekly plan saved.");
-
     setSaving(false);
   }
 
@@ -313,12 +414,75 @@ export default function ClientWorkoutPage() {
           </div>
 
           <h1>
-            {clientName || "Client"}&apos;s
+            {clientName}&apos;s
             <br />
             weekly plan
           </h1>
         </div>
       </header>
+
+      <section className="trainer-workout-library">
+        <div className="trainer-library-heading">
+          <div>
+            <span>YOUR LIBRARY</span>
+            <h2>Need another workout?</h2>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setShowCustomWorkout(
+                (current) => !current
+              );
+
+              setCustomWorkoutMessage("");
+            }}
+          >
+            {showCustomWorkout
+              ? "Close"
+              : "+ Add workout"}
+          </button>
+        </div>
+
+        {showCustomWorkout && (
+          <div className="trainer-custom-workout-form">
+            <input
+              type="text"
+              value={customWorkoutName}
+              maxLength={80}
+              placeholder="e.g. Landmine Press"
+              onChange={(event) => {
+                setCustomWorkoutName(
+                  event.target.value
+                );
+
+                setCustomWorkoutMessage("");
+              }}
+            />
+
+            <button
+              type="button"
+              onClick={addCustomWorkout}
+              disabled={addingWorkout}
+            >
+              {addingWorkout
+                ? "Adding..."
+                : "Add"}
+            </button>
+          </div>
+        )}
+
+        {customWorkoutMessage && (
+          <div className="trainer-library-message">
+            {customWorkoutMessage}
+          </div>
+        )}
+
+        <p>
+          Custom workouts you add here are visible
+          only to your trainer account.
+        </p>
+      </section>
 
       <section className="trainer-workout-days">
         {days.map((day) => (
@@ -344,11 +508,8 @@ export default function ClientWorkoutPage() {
                     className="trainer-workout-row"
                     key={index}
                   >
-                    <input
-                      type="text"
-                      placeholder="Workout"
+                    <select
                       value={row.workout}
-                      maxLength={80}
                       onChange={(event) =>
                         updateRow(
                           day,
@@ -357,13 +518,66 @@ export default function ClientWorkoutPage() {
                           event.target.value
                         )
                       }
-                    />
+                    >
+                      <option value="">
+                        Select workout
+                      </option>
 
-                    <input
-                      type="text"
-                      placeholder="Sets"
+                      <optgroup label="Gym workouts">
+                        {workoutOptions
+                          .filter(
+                            (workout) =>
+                              workout.trainer_id ===
+                              null
+                          )
+                          .map((workout) => (
+                            <option
+                              key={workout.id}
+                              value={workout.name}
+                            >
+                              {workout.name}
+                            </option>
+                          ))}
+                      </optgroup>
+
+                      {workoutOptions.some(
+                        (workout) =>
+                          workout.trainer_id !== null
+                      ) && (
+                        <optgroup label="My workouts">
+                          {workoutOptions
+                            .filter(
+                              (workout) =>
+                                workout.trainer_id !==
+                                null
+                            )
+                            .map((workout) => (
+                              <option
+                                key={workout.id}
+                                value={workout.name}
+                              >
+                                {workout.name}
+                              </option>
+                            ))}
+                        </optgroup>
+                      )}
+
+                      {row.workout &&
+                        !workoutOptions.some(
+                          (workout) =>
+                            workout.name ===
+                            row.workout
+                        ) && (
+                          <option
+                            value={row.workout}
+                          >
+                            {row.workout}
+                          </option>
+                        )}
+                    </select>
+
+                    <select
                       value={row.sets}
-                      maxLength={20}
                       onChange={(event) =>
                         updateRow(
                           day,
@@ -372,13 +586,36 @@ export default function ClientWorkoutPage() {
                           event.target.value
                         )
                       }
-                    />
+                    >
+                      <option value="">
+                        Sets
+                      </option>
 
-                    <input
-                      type="text"
-                      placeholder="Reps"
+                      {setOptions.map(
+                        (sets) => (
+                          <option
+                            value={sets}
+                            key={sets}
+                          >
+                            {sets}
+                          </option>
+                        )
+                      )}
+
+                      {row.sets &&
+                        !setOptions.includes(
+                          row.sets
+                        ) && (
+                          <option
+                            value={row.sets}
+                          >
+                            {row.sets}
+                          </option>
+                        )}
+                    </select>
+
+                    <select
                       value={row.reps}
-                      maxLength={30}
                       onChange={(event) =>
                         updateRow(
                           day,
@@ -387,7 +624,33 @@ export default function ClientWorkoutPage() {
                           event.target.value
                         )
                       }
-                    />
+                    >
+                      <option value="">
+                        Reps
+                      </option>
+
+                      {repOptions.map(
+                        (reps) => (
+                          <option
+                            value={reps}
+                            key={reps}
+                          >
+                            {reps}
+                          </option>
+                        )
+                      )}
+
+                      {row.reps &&
+                        !repOptions.includes(
+                          row.reps
+                        ) && (
+                          <option
+                            value={row.reps}
+                          >
+                            {row.reps}
+                          </option>
+                        )}
+                    </select>
 
                     <div className="trainer-row-actions">
                       {index <

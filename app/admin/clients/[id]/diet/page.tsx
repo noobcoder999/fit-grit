@@ -44,6 +44,17 @@ const days: Array<keyof WeeklyDietPlan> = [
   "sunday",
 ];
 
+const mealOptions = [
+  "Breakfast",
+  "Mid-morning",
+  "Lunch",
+  "Pre-workout",
+  "Post-workout",
+  "Evening snack",
+  "Dinner",
+  "Bedtime",
+];
+
 export default function ClientDietPage() {
   const params = useParams();
   const router = useRouter();
@@ -316,20 +327,37 @@ export default function ClientDietPage() {
                     className="trainer-diet-row"
                     key={index}
                   >
-                    <input
-                      type="text"
-                      placeholder="Breakfast"
-                      value={row.meal}
-                      maxLength={40}
-                      onChange={(event) =>
-                        updateRow(
-                          day,
-                          index,
-                          "meal",
-                          event.target.value
-                        )
-                      }
-                    />
+                  <select
+                    value={row.meal}
+                    onChange={(event) =>
+                      updateRow(
+                        day,
+                        index,
+                        "meal",
+                        event.target.value
+                      )
+                    }
+                  >
+                    <option value="">
+                      Select meal
+                    </option>
+
+                    {mealOptions.map((meal) => (
+                      <option
+                        key={meal}
+                        value={meal}
+                      >
+                        {meal}
+                      </option>
+                    ))}
+
+                    {row.meal &&
+                      !mealOptions.includes(row.meal) && (
+                        <option value={row.meal}>
+                          {row.meal}
+                        </option>
+                      )}
+                  </select>
 
                     <input
                       type="text"
