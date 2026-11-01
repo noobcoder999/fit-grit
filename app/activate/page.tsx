@@ -91,7 +91,7 @@ if (pin !== confirmPin) {
       }),
     });
 
-    const result = await response.json();
+    const result = (await response.json()) as any;
 
     if (!response.ok || !result.success) {
       setError(

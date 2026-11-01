@@ -33,7 +33,7 @@ export default function Home() {
         }),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as any;
 
       if (!response.ok || !result.valid) {
         setError(result.message || "That invite code isn't valid.");

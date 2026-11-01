@@ -45,7 +45,7 @@ export default function ClientLoginPage() {
         }),
       });
 
-      const result = await response.json();
+      const result = (await response.json()) as any;
 
       if (!response.ok || !result.success) {
         setError(

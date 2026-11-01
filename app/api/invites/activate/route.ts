@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   let createdUserId: string | null = null;
 
   try {
-    const body = await request.json();
+    const body = (await request.json()) as any;
 
     const code =
       typeof body.code === "string"
